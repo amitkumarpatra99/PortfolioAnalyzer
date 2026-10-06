@@ -20,6 +20,11 @@ export interface IAnalysis extends Document {
     tailoringSuggestions: string[];
     summary: string;
   };
+  improvedContent?: {
+    improvedSummary: string;
+    improvedExperience: string[];
+    skillsIntegration: string;
+  };
   createdAt: Date;
 }
 
@@ -43,6 +48,11 @@ const AnalysisSchema = new Schema<IAnalysis>(
       missingSkills: [String],
       tailoringSuggestions: [String],
       summary: String,
+    },
+    improvedContent: {
+      improvedSummary: String,
+      improvedExperience: [String],
+      skillsIntegration: String,
     },
   },
   { timestamps: true }

@@ -21,7 +21,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className="glass-strong"
+      className="glass-strong no-pad"
       style={{
         position: "sticky",
         top: 0,

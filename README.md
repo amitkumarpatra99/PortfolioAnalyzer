@@ -6,7 +6,7 @@ Upload a PDF resume, get instant ATS insights, resume strength scores, missing k
 
 ---
 
-## ?? What it does
+## ?? What it does....
 
 - Secure user registration and login with email/password authentication
 - Upload text-based PDF resumes for instant AI evaluation

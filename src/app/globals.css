@@ -29,6 +29,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -38,6 +39,7 @@ body {
   min-height: 100vh;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 /* Enhanced Glass morphism */
@@ -209,11 +211,20 @@ body {
 }
 
 /* Responsive utilities */
+.no-pad {
+  padding: 0 !important;
+}
+
 @media (max-width: 768px) {
-  .glass, .glass-card, .glass-strong {
+  .glass:not(.no-pad), .glass-card:not(.no-pad), .glass-strong:not(.no-pad) {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    padding: 1.5rem !important;
+    padding: 1.5rem;
+  }
+
+  .glass.no-pad, .glass-card.no-pad, .glass-strong.no-pad {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .btn-primary, .btn-secondary {
@@ -228,10 +239,15 @@ body {
 }
 
 @media (max-width: 480px) {
-  .glass, .glass-card, .glass-strong {
+  .glass:not(.no-pad), .glass-card:not(.no-pad), .glass-strong:not(.no-pad) {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    padding: 1.25rem !important;
+    padding: 1.25rem;
+  }
+
+  .glass.no-pad, .glass-card.no-pad, .glass-strong.no-pad {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   .btn-primary, .btn-secondary {

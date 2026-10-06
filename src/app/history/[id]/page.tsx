@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Loader2, ArrowLeft, Target, CheckCircle, XCircle, Lightbulb } from "lucide-react";
+import { Loader2, ArrowLeft, Target, CheckCircle, XCircle, Lightbulb, Sparkles, Clipboard } from "lucide-react";
 import ScoreRing from "@/components/ScoreRing";
 
 interface AnalysisDetail {
@@ -26,6 +26,11 @@ interface AnalysisDetail {
     tailoringSuggestions: string[];
     summary: string;
   };
+  improvedContent?: {
+    improvedSummary: string;
+    improvedExperience: string[];
+    skillsIntegration: string;
+  };
 }
 
 export default function AnalysisDetailPage() {
@@ -35,6 +40,39 @@ export default function AnalysisDetailPage() {
   const [analysis, setAnalysis] = useState<AnalysisDetail | null>(null);
   const [loading, setLoading] = useState(!invalidId);
   const [error, setError] = useState(invalidId ? "Invalid report ID." : "");
+  const [improving, setImproving] = useState(false);
+  const [improveError, setImproveError] = useState("");
+  const [copyMessage, setCopyMessage] = useState("");
+
+  const handleImprove = async () => {
+    if (!analysis?._id) return;
+    setImproving(true);
+    setImproveError("");
+    try {
+      const res = await fetch("/api/improve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: analysis._id }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to generate improvements");
+      setAnalysis((prev) => (prev ? { ...prev, improvedContent: data } : null));
+    } catch (e) {
+      setImproveError((e as Error).message || "Something went wrong.");
+    } finally {
+      setImproving(false);
+    }
+  };
+
+  const handleCopyText = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyMessage(`${label} copied to clipboard!`);
+      window.setTimeout(() => setCopyMessage(""), 2500);
+    } catch {
+      setCopyMessage("Unable to copy. Please try again.");
+    }
+  };
 
   useEffect(() => {
     if (invalidId) return;
@@ -153,6 +191,105 @@ export default function AnalysisDetailPage() {
               ))}
             </ul>
           </div>
+        </div>
+
+        {/* AI Resume Improver */}
+        <div className="glass" style={{ borderRadius: "1.25rem", padding: "1.5rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+            <h3 style={{ fontWeight: 700, color: "#f1f5f9", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <Sparkles size={18} color="#67e8f9" /> AI Resume Improver
+            </h3>
+          </div>
+          {!analysis.improvedContent ? (
+            <div style={{ textAlign: "center", padding: "1.5rem", background: "rgba(6, 182, 212, 0.05)", borderRadius: "0.875rem", border: "1px dashed rgba(6, 182, 212, 0.2)" }}>
+              <p style={{ color: "#94a3b8", fontSize: "0.9rem", marginBottom: "1.25rem", lineHeight: 1.6 }}>
+                Want to take action on these insights? Let our AI rewrite your professional summary, tailor your experience bullet points, and integrate missing keywords.
+              </p>
+              {improveError && (
+                <p style={{ color: "#fca5a5", fontSize: "0.8125rem", marginBottom: "0.75rem" }}>{improveError}</p>
+              )}
+              <button
+                className="btn-primary"
+                onClick={handleImprove}
+                disabled={improving}
+                style={{ fontSize: "0.875rem", cursor: "pointer" }}
+              >
+                {improving ? (
+                  <>
+                    <Loader2 size={16} style={{ animation: "spin 1s linear infinite" }} />
+                    Improving Resume...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={16} />
+                    Improve Resume with AI
+                  </>
+                )}
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+              {copyMessage && (
+                <div style={{ background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.2)", color: "#67e8f9", fontSize: "0.875rem", padding: "0.5rem 1rem", borderRadius: "0.5rem", textAlign: "center" }}>
+                  {copyMessage}
+                </div>
+              )}
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+                  <h4 style={{ color: "#f1f5f9", fontSize: "0.875rem", fontWeight: 600 }}>Improved Professional Summary</h4>
+                  <button
+                    type="button"
+                    className="btn-secondary btn-sm"
+                    onClick={() => handleCopyText(analysis.improvedContent!.improvedSummary, "Summary")}
+                    style={{ padding: "0.25rem 0.5rem", display: "flex", alignItems: "center", gap: "0.25rem" }}
+                  >
+                    <Clipboard size={12} /> Copy
+                  </button>
+                </div>
+                <p style={{ color: "#94a3b8", fontSize: "0.875rem", lineHeight: 1.6, background: "rgba(255,255,255,0.02)", padding: "0.75rem", borderRadius: "0.5rem", border: "1px solid rgba(255,255,255,0.04)", whiteSpace: "pre-line" }}>
+                  {analysis.improvedContent.improvedSummary}
+                </p>
+              </div>
+
+              <div>
+                <h4 style={{ color: "#f1f5f9", fontSize: "0.875rem", fontWeight: 600, marginBottom: "0.5rem" }}>Tailored Experience Bullet Points</h4>
+                <ul style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                  {analysis.improvedContent.improvedExperience.map((bullet, idx) => (
+                    <li key={idx} style={{ display: "flex", flexDirection: "column", gap: "0.25rem", background: "rgba(255,255,255,0.02)", padding: "0.75rem", borderRadius: "0.5rem", border: "1px solid rgba(255,255,255,0.04)" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "0.5rem" }}>
+                        <p style={{ color: "#94a3b8", fontSize: "0.875rem", lineHeight: 1.5 }}>• {bullet}</p>
+                        <button
+                          type="button"
+                          className="btn-secondary btn-sm"
+                          onClick={() => handleCopyText(bullet, `Bullet point ${idx + 1}`)}
+                          style={{ padding: "0.25rem 0.5rem", flexShrink: 0, display: "flex", alignItems: "center", gap: "0.25rem" }}
+                        >
+                          <Clipboard size={12} /> Copy
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+                  <h4 style={{ color: "#f1f5f9", fontSize: "0.875rem", fontWeight: 600 }}>Keywords & Skills Integration</h4>
+                  <button
+                    type="button"
+                    className="btn-secondary btn-sm"
+                    onClick={() => handleCopyText(analysis.improvedContent!.skillsIntegration, "Integration tips")}
+                    style={{ padding: "0.25rem 0.5rem", display: "flex", alignItems: "center", gap: "0.25rem" }}
+                  >
+                    <Clipboard size={12} /> Copy
+                  </button>
+                </div>
+                <p style={{ color: "#94a3b8", fontSize: "0.875rem", lineHeight: 1.6, background: "rgba(255,255,255,0.02)", padding: "0.75rem", borderRadius: "0.5rem", border: "1px solid rgba(255,255,255,0.04)", whiteSpace: "pre-line" }}>
+                  {analysis.improvedContent.skillsIntegration}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="glass" style={{ borderRadius: "1.25rem", padding: "1.5rem" }}>

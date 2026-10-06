@@ -3,15 +3,17 @@ import { getSessionToken } from "@/lib/auth";
 import connectDB from "@/lib/mongodb";
 import Analysis from "@/models/Analysis";
 
-export async function GET(req: NextRequest) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const token = await getSessionToken(req);
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { pathname } = new URL(req.url);
-    const id = pathname.split("/").pop();
+    const { id } = await params;
     if (!id) {
       return NextResponse.json({ error: "ID required" }, { status: 400 });
     }
