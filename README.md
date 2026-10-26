@@ -1,4 +1,4 @@
-# Portfolio Analyzer 
+# Portfolio Analyzer 🗝️
 
 A beautiful AI-powered resume analysis platform built with Next.js, Google Gemini, and MongoDB.
 
