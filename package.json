@@ -1,5 +1,5 @@
 {
-  "name": "portfolio-analyzer-temp",
+  "name": "resumeai",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -15,7 +15,8 @@
     "lucide-react": "^1.6.0",
     "mongoose": "^9.3.2",
     "next": "16.2.1",
-"next-auth": "^4.24.15",
+    "next-auth": "^4.24.15",
+    "pdf-parse": "^2.4.5",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-dropzone": "^15.0.0"
