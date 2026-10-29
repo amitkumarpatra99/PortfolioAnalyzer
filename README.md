@@ -35,7 +35,7 @@ Upload a PDF resume, get instant ATS insights, resume strength scores, missing k
 - Next.js 16 (App Router)
 - React 19
 - Tailwind CSS v4
-- NextAuth v5 for authentication
+- NextAuth v4 for authentication
 - Mongoose + MongoDB for persistence
 - Google Gemini AI for resume evaluation and job matching
 - `pdf-parse` for extracting text from uploaded PDFs
