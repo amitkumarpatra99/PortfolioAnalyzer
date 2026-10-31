@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSessionToken } from "@/lib/auth";
 import connectDB from "@/lib/mongodb";
 import Analysis from "@/models/Analysis";
+import mongoose from "mongoose";
 
 export async function GET(
   req: NextRequest,
@@ -16,6 +17,9 @@ export async function GET(
     const { id } = await params;
     if (!id) {
       return NextResponse.json({ error: "ID required" }, { status: 400 });
+    }
+    if (!mongoose.isValidObjectId(id)) {
+      return NextResponse.json({ error: "Invalid analysis ID" }, { status: 400 });
     }
 
     await connectDB();
