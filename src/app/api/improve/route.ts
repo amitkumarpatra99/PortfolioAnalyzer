@@ -3,6 +3,7 @@ import { getSessionToken } from "@/lib/auth";
 import connectDB from "@/lib/mongodb";
 import Analysis from "@/models/Analysis";
 import { improveResume } from "@/lib/gemini";
+import mongoose from "mongoose";
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,6 +15,9 @@ export async function POST(req: NextRequest) {
     const { id } = await req.json();
     if (!id) {
       return NextResponse.json({ error: "Analysis ID required" }, { status: 400 });
+    }
+    if (typeof id !== "string" || !mongoose.isValidObjectId(id)) {
+      return NextResponse.json({ error: "Invalid analysis ID" }, { status: 400 });
     }
 
     await connectDB();
