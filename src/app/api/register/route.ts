@@ -7,10 +7,15 @@ export async function POST(req: NextRequest) {
   try {
     const { name, email, password } = await req.json();
 
-    if (!name || !email || !password) {
+    if (typeof name !== "string" || typeof email !== "string" || typeof password !== "string") {
       return NextResponse.json({ error: "All fields are required" }, { status: 400 });
     }
 
+    const normalizedName = name.trim();
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedName || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      return NextResponse.json({ error: "Enter a valid name and email address" }, { status: 400 });
+    }
     if (password.length < 6) {
       return NextResponse.json(
         { error: "Password must be at least 6 characters" },
@@ -20,13 +25,13 @@ export async function POST(req: NextRequest) {
 
     await connectDB();
 
-    const existing = await User.findOne({ email: email.toLowerCase() });
+    const existing = await User.findOne({ email: normalizedEmail });
     if (existing) {
       return NextResponse.json({ error: "Email already registered" }, { status: 409 });
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    await User.create({ name, email: email.toLowerCase(), password: hashedPassword });
+    await User.create({ name: normalizedName, email: normalizedEmail, password: hashedPassword });
 
     return NextResponse.json({ message: "Account created successfully" }, { status: 201 });
   } catch (error: unknown) {
