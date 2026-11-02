@@ -21,6 +21,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [analyses, setAnalyses] = useState<Analysis[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/auth/login");
@@ -29,12 +30,16 @@ export default function DashboardPage() {
   useEffect(() => {
     if (status === "authenticated") {
       fetch("/api/history")
-        .then((r) => r.json())
+        .then(async (r) => {
+          const data = await r.json();
+          if (!r.ok) throw new Error(data.error || "Failed to load dashboard");
+          return data;
+        })
         .then((data) => {
           setAnalyses(Array.isArray(data) ? data : []);
-          setLoading(false);
         })
-        .catch(() => setLoading(false));
+        .catch((err) => setError(err instanceof Error ? err.message : "Failed to load dashboard"))
+        .finally(() => setLoading(false));
     }
   }, [status]);
 
@@ -60,6 +65,11 @@ export default function DashboardPage() {
   return (
     <div className="hero-bg" style={{ minHeight: "calc(100vh - 72px)", padding: "3rem 2rem" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+        {error && (
+          <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "0.75rem", padding: "0.875rem 1rem", color: "#fca5a5", marginBottom: "1.5rem" }}>
+            {error}
+          </div>
+        )}
         {/* Header */}
         <div style={{ marginBottom: "3rem" }}>
           <h1 style={{
