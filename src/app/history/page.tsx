@@ -26,6 +26,7 @@ export default function HistoryPage() {
   const [analyses, setAnalyses] = useState<Analysis[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/auth/login");
@@ -34,20 +35,33 @@ export default function HistoryPage() {
   useEffect(() => {
     if (status === "authenticated") {
       fetch("/api/history")
-        .then((r) => r.json())
+        .then(async (r) => {
+          const data = await r.json();
+          if (!r.ok) throw new Error(data.error || "Failed to load history");
+          return data;
+        })
         .then((data) => {
           setAnalyses(Array.isArray(data) ? data : []);
-          setLoading(false);
         })
-        .catch(() => setLoading(false));
+        .catch((err) => setError(err instanceof Error ? err.message : "Failed to load history"))
+        .finally(() => setLoading(false));
     }
   }, [status]);
 
   const handleDelete = async (id: string) => {
+    if (!window.confirm("Delete this analysis? This cannot be undone.")) return;
     setDeleting(id);
-    await fetch(`/api/history?id=${id}`, { method: "DELETE" });
-    setAnalyses((prev) => prev.filter((a) => a._id !== id));
-    setDeleting(null);
+    setError("");
+    try {
+      const response = await fetch(`/api/history?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to delete analysis");
+      setAnalyses((prev) => prev.filter((a) => a._id !== id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete analysis");
+    } finally {
+      setDeleting(null);
+    }
   };
 
   if (loading || status === "loading") {
@@ -62,6 +76,11 @@ export default function HistoryPage() {
   return (
     <div className="hero-bg" style={{ minHeight: "calc(100vh - 64px)", padding: "2.5rem 1.5rem" }}>
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
+        {error && (
+          <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "0.75rem", padding: "0.875rem 1rem", color: "#fca5a5", marginBottom: "1rem" }}>
+            {error}
+          </div>
+        )}
         <div style={{ marginBottom: "2rem", display: "flex", alignItems: "center", gap: "0.75rem" }}>
           <History size={28} color="#06b6d4" />
           <div>
