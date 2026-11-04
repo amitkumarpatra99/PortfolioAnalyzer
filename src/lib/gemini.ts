@@ -1,8 +1,12 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-
-export const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+function getModel() {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error("GEMINI_API_KEY is not configured");
+  }
+  return new GoogleGenerativeAI(apiKey).getGenerativeModel({ model: "gemini-flash-latest" });
+}
 
 function extractJSON(text: string): string {
   const start = text.indexOf("{");
@@ -38,10 +42,27 @@ Respond ONLY with valid JSON, no markdown, no explanation.
 RESUME:
 ${resumeText}`;
 
-  const result = await model.generateContent(prompt);
+  const result = await getModel().generateContent(prompt);
   const text = result.response.text().trim();
   const cleaned = extractJSON(text);
-  return JSON.parse(cleaned) as AnalysisResult;
+  const parsed = JSON.parse(cleaned) as Partial<AnalysisResult>;
+  const clamp = (value: unknown, fallback = 0) =>
+    typeof value === "number" && Number.isFinite(value)
+      ? Math.max(0, Math.min(100, Math.round(value)))
+      : fallback;
+  const strings = (value: unknown): string[] =>
+    Array.isArray(value) ? value.filter((item): item is string => typeof item === "string").map((item) => item.trim()).filter(Boolean) : [];
+
+  return {
+    score: clamp(parsed.score),
+    atsScore: clamp(parsed.atsScore),
+    summary: typeof parsed.summary === "string" ? parsed.summary.trim() : "No summary was generated.",
+    strengths: strings(parsed.strengths),
+    weaknesses: strings(parsed.weaknesses),
+    skills: strings(parsed.skills),
+    missingKeywords: strings(parsed.missingKeywords),
+    improvements: strings(parsed.improvements),
+  };
 }
 
 export async function matchJobDescription(
@@ -66,10 +87,22 @@ ${resumeText}
 JOB DESCRIPTION:
 ${jobDescription}`;
 
-  const result = await model.generateContent(prompt);
+  const result = await getModel().generateContent(prompt);
   const text = result.response.text().trim();
   const cleaned = extractJSON(text);
-  return JSON.parse(cleaned) as JobMatchResult;
+  const parsed = JSON.parse(cleaned) as Partial<JobMatchResult>;
+  const strings = (value: unknown): string[] =>
+    Array.isArray(value) ? value.filter((item): item is string => typeof item === "string").map((item) => item.trim()).filter(Boolean) : [];
+
+  return {
+    matchScore: typeof parsed.matchScore === "number" && Number.isFinite(parsed.matchScore)
+      ? Math.max(0, Math.min(100, Math.round(parsed.matchScore)))
+      : 0,
+    matchedSkills: strings(parsed.matchedSkills),
+    missingSkills: strings(parsed.missingSkills),
+    tailoringSuggestions: strings(parsed.tailoringSuggestions),
+    summary: typeof parsed.summary === "string" ? parsed.summary.trim() : "No job match summary was generated.",
+  };
 }
 
 export async function improveResume(
@@ -111,10 +144,17 @@ Provide the response as a JSON object with EXACTLY this structure:
 
 Respond ONLY with valid JSON, no markdown, no explanation.`;
 
-  const result = await model.generateContent(prompt);
+  const result = await getModel().generateContent(prompt);
   const textResponse = result.response.text().trim();
   const cleaned = extractJSON(textResponse);
-  return JSON.parse(cleaned) as ImprovedContent;
+  const parsed = JSON.parse(cleaned) as Partial<ImprovedContent>;
+  return {
+    improvedSummary: typeof parsed.improvedSummary === "string" ? parsed.improvedSummary.trim() : "No improved summary was generated.",
+    improvedExperience: Array.isArray(parsed.improvedExperience)
+      ? parsed.improvedExperience.filter((item): item is string => typeof item === "string").map((item) => item.trim()).filter(Boolean)
+      : [],
+    skillsIntegration: typeof parsed.skillsIntegration === "string" ? parsed.skillsIntegration.trim() : "",
+  };
 }
 
 export interface AnalysisResult {
