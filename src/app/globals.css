@@ -42,6 +42,60 @@ body {
   overflow-x: hidden;
 }
 
+main,
+main > div {
+  min-width: 0;
+}
+
+img,
+svg,
+canvas,
+video {
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+p,
+li {
+  overflow-wrap: break-word;
+}
+
+.app-page {
+  width: 100%;
+  padding: 2.5rem 1.5rem;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, black 0%, transparent 75%);
+}
+
+a, button, input, textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 3px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 /* Enhanced Glass morphism */
 .glass {
   background: var(--bg-glass);
@@ -82,6 +136,16 @@ body {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
+.app-navbar {
+  background: rgba(8, 11, 20, 0.78) !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+.navbar-inner {
+  width: 100%;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -112,9 +176,9 @@ body {
 
 /* Animated gradient background */
 .hero-bg {
-  background: radial-gradient(ellipse at 20% 50%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+  background: radial-gradient(ellipse at 15% 35%, rgba(6, 182, 212, 0.16) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 15%, rgba(59, 130, 246, 0.14) 0%, transparent 42%),
+    radial-gradient(ellipse at 55% 95%, rgba(139, 92, 246, 0.08) 0%, transparent 45%),
     var(--bg-primary);
 }
 
@@ -133,11 +197,16 @@ body {
   align-items: center;
   gap: 0.5rem;
   box-shadow: 0 4px 16px rgba(6, 182, 212, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 .btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(6, 182, 212, 0.34);
+}
+.btn-primary:active,
+.btn-secondary:active {
+  transform: translateY(0);
 }
 
 .btn-secondary {
