@@ -46,96 +46,67 @@ export default function LandingPage() {
         <section
           className="hero-section"
         >
-          {/* Badge */}
-          <div
-            className="glass-card"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              borderRadius: "9999px",
-              padding: "0.5rem 1.25rem",
-              fontSize: "0.875rem",
-              fontWeight: 500,
-              color: "#67e8f9",
-              marginBottom: "2rem",
-              backdropFilter: "blur(12px)",
-            }}
-          >
-            <Star size={14} fill="#67e8f9" /> Powered by Google Gemini AI
+          <div className="hero-copy">
+            <div className="hero-eyebrow">
+              <Star size={14} fill="#67e8f9" /> Powered by Google Gemini AI
+            </div>
+            <h1>
+              Supercharge your resume
+              <span className="gradient-text">with AI intelligence</span>
+            </h1>
+            <p className="hero-lead">
+              Turn recruiter uncertainty into a clear plan. Get ATS feedback, keyword gaps,
+              and a tailored improvement report in seconds.
+            </p>
+            <div className="hero-actions">
+              <button
+                className="btn-primary btn-lg"
+                onClick={() => router.push(session ? "/analyze" : "/auth/register")}
+              >
+                Analyze your resume <ArrowRight size={18} />
+              </button>
+              {!session && (
+                <Link href="/auth/login" className="btn-secondary btn-lg" style={{ textDecoration: "none" }}>
+                  Sign in
+                </Link>
+              )}
+            </div>
+            <div className="hero-trust">
+              {["AI-Powered Analysis", "ATS Optimized", "Job Match Score", "Free to Start"].map((t) => (
+                <span key={t}>
+                  <CheckCircle size={14} color="#10b981" /> {t}
+                </span>
+              ))}
+            </div>
           </div>
 
-          <h1
-            style={{
-              fontFamily: "Sora, Inter, sans-serif",
-              fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
-              fontWeight: 800,
-              lineHeight: 1.1,
-              letterSpacing: "-0.03em",
-              marginBottom: "1.5rem",
-              color: "#f1f5f9",
-            }}
-          >
-            Supercharge Your Resume
-            <br />
-            <span className="gradient-text">with AI Intelligence</span>
-          </h1>
-
-          <p
-            style={{
-              fontSize: "clamp(1rem, 2.5vw, 1.25rem)",
-              color: "#64748b",
-              maxWidth: 600,
-              margin: "0 auto 2.5rem",
-              lineHeight: 1.7,
-            }}
-          >
-            Upload your resume and get an instant AI-powered score, ATS feedback, keyword analysis,
-            and job match insights - all in seconds.
-          </p>
-
-          <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
-            <button
-              className="btn-primary btn-lg"
-              onClick={() => router.push(session ? "/analyze" : "/auth/register")}
-            >
-              Analyze Your Resume <ArrowRight size={18} />
-            </button>
-            {!session && (
-              <Link
-                href="/auth/login"
-                className="btn-secondary btn-lg"
-                style={{ textDecoration: "none" }}
-              >
-                Sign In
-              </Link>
-            )}
-          </div>
-
-          {/* Trust badges */}
-          <div
-            style={{
-              display: "flex",
-              gap: "1.5rem",
-              justifyContent: "center",
-              marginTop: "3rem",
-              flexWrap: "wrap",
-            }}
-          >
-            {["AI-Powered Analysis", "ATS Optimized", "Job Match Score", "Free to Start"].map((t) => (
-              <span
-                key={t}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.375rem",
-                  color: "#64748b",
-                  fontSize: "0.875rem",
-                }}
-              >
-                <CheckCircle size={14} color="#10b981" /> {t}
-              </span>
-            ))}
+          <div className="hero-preview" aria-label="Resume analysis preview">
+            <div className="preview-glow" />
+            <div className="preview-panel">
+              <div className="preview-header">
+                <div>
+                  <span>Resume score</span>
+                  <strong>Excellent</strong>
+                </div>
+                <div className="preview-live"><span /> Live analysis</div>
+              </div>
+              <div className="preview-score-row">
+                <div className="preview-ring">
+                  <div><strong>87</strong><span>/100</span></div>
+                </div>
+                <div className="preview-metrics">
+                  <div><span>ATS score</span><strong>92</strong></div>
+                  <div><span>Job match</span><strong>84%</strong></div>
+                  <div><span>Keywords</span><strong>18</strong></div>
+                </div>
+              </div>
+              <div className="preview-divider" />
+              <div className="preview-list">
+                <div><CheckCircle size={16} color="#10b981" /><span>Strong achievement metrics</span><strong>+12</strong></div>
+                <div><CheckCircle size={16} color="#10b981" /><span>Clear career progression</span><strong>+8</strong></div>
+                <div><Target size={16} color="#f59e0b" /><span>Add target role keywords</span><strong>3</strong></div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -160,6 +131,7 @@ export default function LandingPage() {
           </div>
 
           <div
+            className="features-grid"
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
@@ -190,6 +162,7 @@ export default function LandingPage() {
                   }}
                 >
                   <div
+                    className="how-grid"
                     style={{
                       position: "absolute",
                       top: 0,
@@ -349,8 +322,212 @@ export default function LandingPage() {
         .hero-section {
           max-width: 1200px;
           margin: 0 auto;
+          min-height: calc(100vh - 72px);
+          display: grid;
+          grid-template-columns: minmax(0, 1.08fr) minmax(380px, 0.92fr);
+          align-items: center;
+          gap: 4rem;
+          padding: 5rem 2rem;
+        }
+        .hero-copy {
+          position: relative;
+          z-index: 2;
+        }
+        .hero-eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          border: 1px solid rgba(103,232,249,0.18);
+          background: rgba(6,182,212,0.08);
+          color: #67e8f9;
+          border-radius: 9999px;
+          padding: 0.5rem 0.85rem;
+          font-size: 0.8125rem;
+          font-weight: 700;
+          margin-bottom: 1.5rem;
+        }
+        .hero-copy h1 {
+          max-width: 760px;
+          font-family: var(--font-display);
+          font-size: clamp(3.25rem, 6vw, 5.25rem);
+          line-height: 0.98;
+          letter-spacing: -0.055em;
+          font-weight: 800;
+          color: #f8fafc;
+          margin-bottom: 1.5rem;
+        }
+        .hero-copy h1 span {
+          display: block;
+          margin-top: 0.18em;
+        }
+        .hero-lead {
+          max-width: 610px;
+          color: #94a3b8;
+          font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+          line-height: 1.75;
+          margin-bottom: 2rem;
+        }
+        .hero-actions {
+          display: flex;
+          gap: 0.75rem;
+          align-items: center;
+          flex-wrap: wrap;
+        }
+        .hero-trust {
+          display: flex;
+          gap: 1.1rem;
+          flex-wrap: wrap;
+          margin-top: 2rem;
+          color: #94a3b8;
+          font-size: 0.8125rem;
+        }
+        .hero-trust span {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+        }
+        .hero-preview {
+          position: relative;
+          min-height: 470px;
+          display: flex;
+          align-items: center;
+          perspective: 1000px;
+        }
+        .preview-glow {
+          position: absolute;
+          inset: 8%;
+          background: rgba(6,182,212,0.22);
+          filter: blur(60px);
+          border-radius: 50%;
+        }
+        .preview-panel {
+          position: relative;
+          width: 100%;
+          max-width: 520px;
+          margin-left: auto;
+          border-radius: 1.5rem;
+          border: 1px solid rgba(148,163,184,0.16);
+          background: linear-gradient(145deg, rgba(22,30,48,0.96), rgba(10,14,25,0.96));
+          box-shadow: 0 32px 80px rgba(0,0,0,0.48), inset 0 1px rgba(255,255,255,0.04);
+          padding: 1.5rem;
+          transform: rotateY(-4deg) rotateX(1deg);
+        }
+        .preview-header,
+        .preview-score-row,
+        .preview-list div {
+          display: flex;
+          align-items: center;
+        }
+        .preview-header {
+          justify-content: space-between;
+          margin-bottom: 1.25rem;
+        }
+        .preview-header > div:first-child {
+          display: grid;
+        }
+        .preview-header span {
+          color: #64748b;
+          font-size: 0.75rem;
+        }
+        .preview-header strong {
+          color: #f8fafc;
+          font-size: 1.125rem;
+        }
+        .preview-live {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          color: #94a3b8;
+          font-size: 0.75rem;
+          border: 1px solid rgba(148,163,184,0.12);
+          border-radius: 999px;
+          padding: 0.35rem 0.65rem;
+          background: rgba(255,255,255,0.03);
+        }
+        .preview-live span {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #10b981;
+          box-shadow: 0 0 12px #10b981;
+        }
+        .preview-score-row {
+          gap: 1.5rem;
+        }
+        .preview-ring {
+          width: 146px;
+          height: 146px;
+          flex: 0 0 146px;
+          border-radius: 50%;
+          display: grid;
+          place-items: center;
+          background: conic-gradient(#10b981 0deg 313deg, rgba(255,255,255,0.07) 313deg);
+          box-shadow: 0 0 40px rgba(16,185,129,0.12);
+        }
+        .preview-ring > div {
+          width: 126px;
+          height: 126px;
+          border-radius: 50%;
+          display: grid;
+          place-content: center;
           text-align: center;
-          padding: 6rem 2rem 4rem;
+          background: #101624;
+        }
+        .preview-ring strong {
+          display: block;
+          color: #6ee7b7;
+          font-size: 2.5rem;
+          line-height: 1;
+        }
+        .preview-ring span {
+          color: #64748b;
+          font-size: 0.75rem;
+        }
+        .preview-metrics {
+          flex: 1;
+          display: grid;
+          gap: 0.55rem;
+        }
+        .preview-metrics div {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border: 1px solid rgba(148,163,184,0.1);
+          border-radius: 0.75rem;
+          padding: 0.65rem 0.75rem;
+          background: rgba(255,255,255,0.025);
+        }
+        .preview-metrics span {
+          color: #94a3b8;
+          font-size: 0.75rem;
+        }
+        .preview-metrics strong {
+          color: #e2e8f0;
+          font-size: 0.875rem;
+        }
+        .preview-divider {
+          height: 1px;
+          background: rgba(148,163,184,0.1);
+          margin: 1.25rem 0;
+        }
+        .preview-list {
+          display: grid;
+          gap: 0.55rem;
+        }
+        .preview-list div {
+          gap: 0.65rem;
+          border-radius: 0.75rem;
+          color: #cbd5e1;
+          font-size: 0.8125rem;
+          padding: 0.55rem 0.65rem;
+          background: rgba(255,255,255,0.025);
+        }
+        .preview-list div span {
+          flex: 1;
+        }
+        .preview-list div strong {
+          color: #64748b;
+          font-size: 0.75rem;
         }
         .features-section {
           padding: 4rem 2rem;
@@ -366,22 +543,43 @@ export default function LandingPage() {
         }
 
         @media (max-width: 1024px) {
-          .hero-section { padding: 5rem 1.5rem 3rem; }
+          .hero-section { grid-template-columns: 1fr 420px; gap: 2rem; padding: 4rem 1.5rem; }
+          .hero-copy h1 { font-size: clamp(3rem, 7vw, 4.5rem); }
+          .hero-preview { min-height: 430px; }
           .features-section { padding: 3rem 1.5rem; }
           .how-it-works-section { padding: 3rem 1.5rem 4rem; }
           .cta-box { padding: 2.5rem 3rem; }
         }
 
         @media (max-width: 768px) {
-          .hero-section { padding: 4rem 1rem 2rem; }
+          .hero-section { grid-template-columns: 1fr; min-height: auto; text-align: left; padding: 3.5rem 1rem 2.5rem; }
+          .hero-copy h1 { font-size: clamp(2.65rem, 13vw, 4rem); }
+          .hero-lead { font-size: 1rem; }
+          .hero-preview { min-height: 390px; }
+          .preview-panel { max-width: 560px; margin: 0 auto; transform: none; }
+          .hero-trust { gap: 0.75rem 1rem; }
           .features-section { padding: 2rem 1rem; }
           .how-it-works-section { padding: 2rem 1rem 3rem; }
           .cta-box { padding: 2rem 1.5rem; }
           .step-connector { display: none !important; }
+          .features-grid { grid-template-columns: 1fr !important; gap: 1rem !important; }
+          .features-grid > div { padding: 1.5rem !important; }
+          .how-grid { grid-template-columns: 1fr !important; gap: 1rem !important; }
+          .how-grid > div { padding: 1.5rem !important; }
         }
 
         @media (max-width: 480px) {
-          .hero-section { padding: 3rem 1rem 1.5rem; }
+          .hero-section { padding: 2.5rem 1rem 2rem; }
+          .hero-actions { display: grid; grid-template-columns: 1fr; }
+          .hero-actions .btn-primary,
+          .hero-actions .btn-secondary { width: 100%; justify-content: center; }
+          .hero-preview { min-height: 330px; }
+          .preview-panel { padding: 1rem; }
+          .preview-ring { width: 112px; height: 112px; flex-basis: 112px; }
+          .preview-ring > div { width: 96px; height: 96px; }
+          .preview-ring strong { font-size: 2rem; }
+          .preview-score-row { gap: 0.75rem; }
+          .preview-metrics div { padding: 0.5rem; }
           .features-section { padding: 1.5rem 1rem; }
           .how-it-works-section { padding: 1.5rem 1rem 2rem; }
           .cta-box { padding: 1.5rem 1rem; }
