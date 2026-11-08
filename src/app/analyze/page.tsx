@@ -192,7 +192,7 @@ export default function AnalyzePage() {
   };
 
   return (
-    <div className="hero-bg" style={{ minHeight: "calc(100vh - 64px)", padding: "2.5rem 1.5rem" }}>
+    <div className="hero-bg app-page" style={{ minHeight: "calc(100vh - 64px)" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ marginBottom: "2rem" }}>
           <h1 style={{ fontFamily: "Sora, Inter, sans-serif", fontSize: "2rem", fontWeight: 700, color: "#f1f5f9", marginBottom: "0.375rem" }}>
@@ -513,6 +513,11 @@ export default function AnalyzePage() {
         }
         @media (max-width: 768px) {
           .analyze-grid.has-result { grid-template-columns: 1fr; }
+          .app-page { padding: 1.5rem 1rem; }
+        }
+        @media (max-width: 480px) {
+          .app-page { padding: 1.25rem 0.75rem; }
+          .app-page h1 { font-size: 1.625rem !important; }
         }
       `}</style>
     </div>
