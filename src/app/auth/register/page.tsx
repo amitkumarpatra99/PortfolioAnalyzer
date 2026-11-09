@@ -36,13 +36,12 @@ export default function RegisterPage() {
 
   return (
     <div
-      className="hero-bg"
+      className="hero-bg app-page"
       style={{
         minHeight: "calc(100vh - 64px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "2rem 1.5rem",
       }}
     >
       <div className="glass" style={{ width: "100%", maxWidth: 440, borderRadius: "1.5rem", padding: "2.5rem" }}>
