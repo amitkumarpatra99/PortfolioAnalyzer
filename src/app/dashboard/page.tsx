@@ -63,7 +63,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="hero-bg" style={{ minHeight: "calc(100vh - 72px)", padding: "3rem 2rem" }}>
+    <div className="hero-bg app-page" style={{ minHeight: "calc(100vh - 72px)" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         {error && (
           <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "0.75rem", padding: "0.875rem 1rem", color: "#fca5a5", marginBottom: "1.5rem" }}>
@@ -290,8 +290,8 @@ export default function DashboardPage() {
         }
 
         @media (max-width: 768px) {
-          .hero-bg { padding: 2rem 1rem; }
-          .glass-card { padding: 1.5rem; }
+          .app-page { padding: 2rem 1rem; }
+          .glass-card { padding: 1.25rem; }
         }
 
         @media (max-width: 480px) {
