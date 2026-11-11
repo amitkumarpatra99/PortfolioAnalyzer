@@ -68,13 +68,24 @@ export default function HistoryPage() {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "calc(100vh - 64px)" }}>
         <Loader2 size={32} color="#06b6d4" style={{ animation: "spin 1s linear infinite" }} />
-        <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+        <style>{`
+          @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+          @media (max-width: 768px) {
+            .app-page { padding: 1.5rem 1rem; }
+            .history-card { flex-direction: column; gap: 1rem !important; }
+            .history-card > .score-ring-wrap { align-self: flex-start; }
+          }
+          @media (max-width: 480px) {
+            .app-page { padding: 1.25rem 0.75rem; }
+            .history-card { padding: 1rem !important; }
+          }
+        `}</style>
       </div>
     );
   }
 
   return (
-    <div className="hero-bg" style={{ minHeight: "calc(100vh - 64px)", padding: "2.5rem 1.5rem" }}>
+    <div className="hero-bg app-page" style={{ minHeight: "calc(100vh - 64px)" }}>
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
         {error && (
           <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "0.75rem", padding: "0.875rem 1rem", color: "#fca5a5", marginBottom: "1rem" }}>
@@ -103,7 +114,7 @@ export default function HistoryPage() {
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             {analyses.map((a) => (
-              <div key={a._id} className="glass" style={{ borderRadius: "1.25rem", padding: "1.5rem", display: "flex", gap: "1.5rem", alignItems: "flex-start" }}>
+              <div key={a._id} className="glass history-card" style={{ borderRadius: "1.25rem", padding: "1.5rem", display: "flex", gap: "1.5rem", alignItems: "flex-start" }}>
                 <ScoreRing score={a.score} size={80} strokeWidth={7} label="" />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "1rem", flexWrap: "wrap" }}>
