@@ -101,7 +101,7 @@ export default function AnalysisDetailPage() {
 
   if (error || !analysis) {
     return (
-      <div className="hero-bg" style={{ minHeight: "calc(100vh - 64px)", padding: "2.5rem 1.5rem" }}>
+      <div className="hero-bg app-page" style={{ minHeight: "calc(100vh - 64px)" }}>
         <div className="glass" style={{ maxWidth: 720, margin: "0 auto", padding: "2rem" }}>
           <button onClick={handleGoBack} className="btn-secondary" style={{ marginBottom: "1.25rem" }}>
             <ArrowLeft size={16} /> Back to history
@@ -346,7 +346,18 @@ export default function AnalysisDetailPage() {
           </div>
         )}
       </div>
-      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+      <style>{`
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @media (max-width: 768px) {
+          .app-page { padding: 1.5rem 1rem; }
+          .app-page h1 { font-size: 1.625rem !important; }
+        }
+        @media (max-width: 480px) {
+          .app-page { padding: 1.25rem 0.75rem; }
+          .app-page .glass { padding: 1rem !important; }
+          .app-page button { max-width: 100%; }
+        }
+      `}</style>
     </div>
   );
 }
