@@ -21,7 +21,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className="glass-strong no-pad"
+      className="glass-strong no-pad app-navbar"
       style={{
         position: "sticky",
         top: 0,
@@ -32,6 +32,7 @@ export default function Navbar() {
       }}
     >
       <div
+        className="navbar-inner"
         style={{
           maxWidth: 1200,
           margin: "0 auto",
@@ -179,10 +180,12 @@ export default function Navbar() {
         @media (max-width: 768px) {
           .desktop-nav { display: none !important; }
           .mobile-menu-btn { display: block !important; }
+          .navbar-inner { height: 64px !important; padding: 0 1rem !important; }
+          .app-navbar > div:last-child { padding: 1rem !important; }
         }
 
         @media (max-width: 480px) {
-          nav > div { padding: 0 1rem; height: 64px; }
+          .navbar-inner { padding: 0 0.875rem !important; }
           .glass-strong { backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important; }
         }
       `}</style>
